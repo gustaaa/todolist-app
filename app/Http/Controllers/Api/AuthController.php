@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+// use App\Http\Controllers\Api\Todo;
+use App\Models\todo;
+use App\Http\Requests\TodoRequest;
+
 class AuthController extends Controller
 {
    use ApiResponse; 

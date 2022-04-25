@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
+use App\Traits\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponse;
     /**
      * A list of the exception types that are not reported.
      *
@@ -15,7 +20,6 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         //
     ];
-
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
@@ -26,7 +30,6 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
-
     /**
      * Register the exception handling callbacks for the application.
      *
@@ -38,4 +41,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
-}
+    public function render($request, $exception)
+    {
+        if($exception instanceof ModelNotFoundException && $request->wantsJson()){
+            return response()->json(
+                ['message' => 'Not Found!'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        return parent::render($request, $exception);
+    }
+} 
